@@ -1,0 +1,72 @@
+﻿@model dynamic
+
+<div class="container">
+    <h2>Orders</h2>
+
+    <div>
+            @using (Html.BeginForm("Orders", "Home", FormMethod.Post))
+            {
+                <div class="form-row" style="margin-left: -13px">
+                    <div class="form-group col-md-4">
+                        <input type="date" class="form-control flex-fill" name="searchString" autocomplete="off">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-primary w-100" style="margin-left: -100px">Search</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <br /><br /><hr />
+
+
+    @foreach (var info in Model.info)
+    {
+        DateTime dateData = info.OrderDate;
+        <h3>Order @info.OrderID - @dateData.ToString("yyyy/MM/dd")</h3>
+        <div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">List Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        decimal sum = 0;
+                    }
+
+                    @foreach (var orders in Model.order)
+                    {
+                        if (@orders.OrderID == @info.OrderID)
+                        {
+                            var total = @orders.ListPrice * @orders.Quantity;
+                            <tr>
+                                <td style="width: 40%">@orders.ProductName</td>
+                                <td>@orders.ListPrice</td>
+                                <td>@orders.Quantity</td>
+                                <td>@total</td>
+
+                                @{ sum += total; }
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Grand Total:</th>
+                        <td><b>@sum</b></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+</div>
+
